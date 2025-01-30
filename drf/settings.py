@@ -25,8 +25,9 @@ SECRET_KEY = 'django-insecure-on*1oc)l61k5r0@tjtc40i9=ozadk4n67!2tu((yg=st9t75b*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['oravla.pocketserverhub.xyz', 'www.oravla.pocketserverhub.xyz', 'api.oravla.pocketserverhub.xyz']
 
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 
@@ -58,8 +59,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-CORS_ALLOW_ALL_ORIGINS = True
 
 
 ROOT_URLCONF = 'drf.urls'
