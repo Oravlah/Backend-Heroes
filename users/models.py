@@ -1,8 +1,24 @@
-import uuid
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 from django.core.validators import RegexValidator
+import uuid
 
-class Users(models.Model):
+class UserManager(BaseUserManager):
+    def create_user(self, username, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('The Email field must be set')
+        user = self.model(username=username, email=email, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, username, email, password=None, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+
+        return self.create_user(username, email, password, **extra_fields)
+
+class Users(AbstractBaseUser):
     id = models.UUIDField(
         primary_key=True,
         default=uuid.uuid4,
@@ -15,10 +31,10 @@ class Users(models.Model):
     confirmpassword = models.CharField(max_length=20, validators=[RegexValidator(r'^[a-zA-Z0-9!@#$%^&*()_+]*$')])
     age = models.PositiveSmallIntegerField()
 
+    objects = UserManager()
 
-#1-validacion para el campo fullname, para que solo se puenda ingresar letras
-#2-validacion para el campo username, para que solo se puenda ingresar letras
-#3-validacion para el campo email, para que sea un email valido
-#4-validacion para el campo password, para que solo se puenda ingresar letras, numeros y los siguientes caracteres !@#$%^&*()_+, ademas de que debe coincidir con el campo confirmpassword
-#5-validacion para el campo confirmpassword, para que solo se puenda ingresar letras, numeros y los siguientes caracteres !@#$%^&*()_+, ademas de que debe coincidir con el campo password
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'fullname', 'age']
 
+    def __str__(self):
+        return self.email

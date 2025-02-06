@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-on*1oc)l61k5r0@tjtc40i9=ozadk4n67!2tu((yg=st9t75b*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['oravla.pocketserverhub.xyz', 'www.oravla.pocketserverhub.xyz', 'api.oravla.pocketserverhub.xyz']
+ALLOWED_HOSTS = []
 
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework_simplejwt',
     'rest_framework',
     'heroes',
     'users',
@@ -48,6 +49,31 @@ INSTALLED_APPS = [
     'corsheaders',
 
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+
+# Configurar el tiempo de expiración del token
+from datetime import timedelta
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),  # Token válido por 30 minutos
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),     # Token de refresco por 7 días
+    "ROTATE_REFRESH_TOKENS": True,                   # Renovar el token al refrescarlo
+    "BLACKLIST_AFTER_ROTATION": True,                # Bloquear tokens antiguos después de la rotación
+    "AUTH_HEADER_TYPES": ("Bearer",),                # Tipo de autenticación en la cabecera
+}
+
+
+
+
+
+
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -133,8 +159,3 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'
-}
